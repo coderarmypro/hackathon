@@ -1,0 +1,691 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meet Claude - Anthropic</title>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="medicalgpt.ico" rel="shortcut icon" type="image/x-icon"/>
+    <style>
+        :root {
+            --primary-color: #ADD8E6;
+            --secondary-color: #008080;
+            --accent-color: #004d4d;
+            --text-color: #090808;
+        }
+
+        body {
+            font-family: 'Open Sans', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--primary-color);
+            color: var(--text-color);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        header {
+            background-color: var(--secondary-color);
+            padding: 20px 0;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            transition: background-color 0.3s ease;
+        }
+
+        header:hover {
+            background-color: var(--accent-color);
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: white;
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 20px;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary-color);
+        }
+
+        .auth-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.1s ease;
+        }
+
+        .button:hover {
+            transform: translateY(-2px);
+        }
+
+        .button-login {
+            background-color: var(--accent-color);
+            color: white;
+        }
+
+        .button-register {
+            background-color: white;
+            color: var(--secondary-color);
+        }
+
+        main {
+            margin-top: 80px;
+            padding: 40px 0;
+        }
+
+        .hero {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 40px;
+        }
+
+        .hero-content {
+            flex: 1;
+        }
+
+        h1 {
+            font-size: 48px;
+            margin-bottom: 10px;
+        }
+
+        p {
+            font-size: 18px;
+            margin-bottom: 30px;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 20px;
+        }
+
+        .hero-image {
+            flex: 1;
+            max-width: 500px;
+        }
+
+        .hero-image img {
+            width: 100%;
+            height: auto;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .new-section {
+            margin-top: 60px;
+            background-color: white;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .new-badge {
+            background-color: #e9967a;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: bold;
+            display: inline-block;
+            margin-bottom: 10px;
+        }
+
+        .new-section h2 {
+            font-size: 36px;
+            margin-bottom: 20px;
+        }
+
+        .new-section-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 40px;
+        }
+
+        .new-section-text {
+            flex: 1;
+        }
+
+        .new-section-image {
+            flex: 1;
+            max-width: 500px;
+        }
+
+        .new-section-image img {
+            width: 100%;
+            height: auto;
+            border-radius: 10px;
+            transition: transform 0.3s ease;
+        }
+
+        .new-section-image img:hover {
+            transform: scale(1.05);
+        }
+        .capabilities-section {
+            background-color: white;
+            padding: 60px 40px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-top: 60px;
+        }
+
+        .capabilities-section h2 {
+            font-size: 36px;
+            margin-bottom: 40px;
+            text-align: center;
+            color: var(--secondary-color);
+            position: relative;
+            display: inline-block;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .capabilities-section h2::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background-color: var(--accent-color);
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+
+        .capabilities-section:hover h2::after {
+            transform: scaleX(1);
+        }
+
+        .capabilities-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+        }
+
+        .capability-card {
+            background-color: var(--primary-color);
+            padding: 30px;
+            border-radius: 10px;
+            text-align: center;
+            transition: all 0.3s ease;
+            border: 2px solid var(--secondary-color);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .capability-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: var(--secondary-color);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: 1;
+        }
+
+        .capability-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .capability-card:hover::before {
+            opacity: 0.1;
+        }
+
+        .capability-icon {
+            font-size: 48px;
+            margin-bottom: 20px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .capability-title {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: var(--secondary-color);
+            position: relative;
+            z-index: 2;
+        }
+
+        .capability-description {
+            font-size: 16px;
+            position: relative;
+            z-index: 2;
+        }
+        .team-section{
+            font-size: 36px;
+            margin-bottom: 10px;
+            text-align: center;
+            color: var(--secondary-color);
+            position: relative;
+            display: inline-block;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        
+        .team-section h2{
+            position: relative;
+            font-size: 36px;
+            margin-bottom: 20px;
+            text-align: center;
+            color: var(--secondary-color);
+            position: relative;
+            display: inline-block;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .grid {
+            padding-top: 20px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .card {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            padding: 20px;
+            text-align: center;
+        }
+        .profile-img {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-bottom: 15px;
+        }
+        .name {
+            font-size: 1.2em;
+            font-weight: bold;
+            margin: 0 0 5px;
+        }
+        .title {
+            color: #00a0a0;
+            margin: 0 0 10px;
+        }
+        .description {
+            font-size: 0.9em;
+            color: #666;
+            margin-bottom: 15px;
+        }
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+        }
+        .social-links a {
+            color: #00a0a0;
+            text-decoration: none;
+        }
+
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fade-in-up {
+            animation: fadeInUp 0.6s ease-out forwards;
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+        .contact-section {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            background-color: white;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            
+            width: 100%;
+            border: 2px solid var(--secondary-color);
+            margin-top: 50px; /* Space between this section and the previous section */
+        }
+
+        .contact-info {
+            background-color: var(--secondary-color);
+            color: white;
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .contact-info h2 {
+            margin-bottom: 20px;
+            font-size: 24px;
+        }
+
+        .contact-info p {
+            margin: 10px 0;
+            font-size: 18px;
+        }
+
+        .contact-info p i {
+            margin-right: 10px;
+            color: var(--primary-color);
+        }
+
+        .contact-form {
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .contact-form h2 {
+            margin-bottom: 20px;
+            font-size: 24px;
+        }
+
+        .contact-form .form-group {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 15px;
+            position: relative;
+        }
+
+        .contact-form .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .contact-form .form-group input,
+        .contact-form .form-group textarea {
+            width: 100%;
+            padding: 10px;
+            padding-left: 35px; /* Space for icons */
+            border: 1px solid var(--secondary-color);
+            border-radius: 5px;
+            font-size: 16px;
+            color: var(--text-color);
+        }
+
+        .contact-form .form-group textarea {
+            resize: none;
+            height: 100px;
+        }
+
+        .contact-form .form-group i {
+            position: absolute;
+            top: 35px;
+            left: 10px;
+            color: var(--secondary-color);
+            font-size: 18px;
+        }
+
+        .contact-form button {
+            background-color: var(--secondary-color);
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+            transition: background-color 0.3s ease, transform 0.3s ease;
+        }
+
+        .contact-form button:hover {
+            background-color: var(--accent-color);
+            transform: translateY(-3px);
+        }
+
+        .contact-form .form-group input:hover,
+        .contact-form .form-group textarea:hover {
+            border-color: var(--accent-color);
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <nav>
+                <img src="./medicalgpt.png" width="40px" height="40px" class="logo"></a>
+                <div class="nav-links">
+                </div>
+                <div class="auth-buttons">
+                    <button class="button button-login"><a href="./signin.html" style="color: #fff;">Login</a></button>
+                    <button class="button button-register"><a href="./signup.html">Sign up</a></button>
+                </div>
+            </nav>
+        </div>
+    </header>
+    <main>
+        <div class="container">
+            <div class="hero">
+                <div class="hero-content">
+                    <h1>Meet MediCare</h1>
+                    <p>MediCare is your trusted AI-powered medical assistant which is dedicated to providing accurate, personalized health support to help you stay informed and empowered.</p>
+                    <div class="cta-buttons">
+                        <button class="button button-login pulse">TRY MediCare</button>
+                        <button class="button button-register">Get API access</button>
+                    </div>
+                </div>
+                <div class="hero-image">
+                    <img src="ai.webp" alt="Medical AI concept">
+                </div>
+            </div>
+            <div class="new-section">
+                <span class="new-badge">NEW</span>
+                <h2>Introducing MediCare</h2>
+                <div class="new-section-content">
+                    <div class="new-section-text">
+                        <p>Discover how MediCare can transform your health journey—get started today and experience personalized medical support like never before!.</p>
+                        <button class="button button-login">Read the blog post</button>
+                    </div>
+                    <div class="new-section-image">
+                        <img src="./ai2.webp" width="150px" height="200px" alt="Medical AI advancement">
+                    </div>
+                </div>
+            </div>
+            <section class="capabilities-section">
+                <h2>MediCare's Capabilities</h2>
+                <div class="capabilities-grid">
+                    <div class="capability-card fade-in-up" style="animation-delay: 0.1s;">
+                        <div class="capability-icon">🩺</div>
+                        <div class="capability-title">Advanced Diagnostics</div>
+                        <div class="capability-description">Utilize cutting-edge AI to perform complex diagnostic tasks, enhancing accuracy and speed in medical assessments.</div>
+                    </div>
+                    <div class="capability-card fade-in-up" style="animation-delay: 0.3s;">
+                        <div class="capability-icon">🧬</div>
+                        <div class="capability-title">Personalized Treatment</div>
+                        <div class="capability-description">Tailor treatment plans based on individual genetic profiles, medical history, and lifestyle factors for optimal patient outcomes.</div>
+                    </div>
+                    <div class="capability-card fade-in-up" style="animation-delay: 0.5s;">
+                        <div class="capability-icon">📊</div>
+                        <div class="capability-title">Health Data Analytics</div>
+                        <div class="capability-description">Process and analyze vast amounts of health data to identify trends, predict outbreaks, and improve overall healthcare strategies.</div>
+                    </div>
+                </div>
+            </section>
+            <section class="team-section">
+                <h2>Meet The Team</h2>
+                <div class="team-grid" id="teamGrid"></div>
+            </section>
+            <div class="grid">
+                <div class="card">
+                    <img src="./Sujit.jpg" alt="Sujit Kumar" class="profile-img">
+                    <h2 class="name">Sujit Kumar</h2>
+                    <div class="social-links">
+                        <a href="https://www.linkedin.com/in/sujitkumar5789/" aria-label="LinkedIn">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect x="2" y="9" width="4" height="12"></rect><circle cx="4" cy="4" r="2"></circle></svg>
+                        </a>
+                        <a href="https://github.com/coderarmypro" aria-label="GitHub">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg>
+                        </a>
+                    </div>
+                </div>
+        
+                <div class="card">
+                    <img src="./sandip.jpg" alt="Sandip Gupta" class="profile-img">
+                    <h2 class="name">Sandip Gupta</h2>
+                    <div class="social-links">
+                        <a href="https://www.linkedin.com/in/sandeep-gupta-b74956294" aria-label="LinkedIn">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect x="2" y="9" width="4" height="12"></rect><circle cx="4" cy="4" r="2"></circle></svg>
+                        </a>
+                        <a href="https://github.com/sandeep7224" aria-label="GitHub">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg>
+                        </a>
+                    </div>
+                </div>
+                
+            </div>
+            <div class="grid">
+                <div class="card">
+                    <img src="./adarsh.jpg" alt="Adarsh Kumar" class="profile-img">
+                    <h2 class="name">Adarsh Kumar</h2>
+                    <div class="social-links">
+                        <a href="https://www.linkedin.com/in/adarsh-kumar-43b314201" aria-label="LinkedIn">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect x="2" y="9" width="4" height="12"></rect><circle cx="4" cy="4" r="2"></circle></svg>
+                        </a>
+                        <a href="https://github.com/adarshkumar321" aria-label="GitHub">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg>
+                        </a>
+                    </div>
+                </div>
+        
+                <div class="card">
+                    <img src="./sandhya.jpg" alt="Sandhya Verma" class="profile-img">
+                    <h2 class="name">Sandhya Verma</h2>
+                    <div class="social-links">
+                        <a href="#" aria-label="LinkedIn">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect x="2" y="9" width="4" height="12"></rect><circle cx="4" cy="4" r="2"></circle></svg>
+                        </a>
+                        <a href="#" aria-label="GitHub">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg>
+                        </a>
+                    </div>
+                </div>
+                
+            </div>
+            <div class="contact-section">
+                <div class="contact-info">
+                    <h2>Contact Information</h2>
+                    <p><i class="fas fa-phone"></i> +8801779177686</p>
+                    <p><i class="fas fa-phone"></i> +986783636866</p>
+                    <p><i class="fas fa-envelope"></i> support@uprangly.com</p>
+                    <p><i class="fas fa-map-marker-alt"></i> New York, USA</p>
+                </div>
+                <div class="contact-form">
+                    <h2>Get In Touch With us</h2>
+                    <div class="form-group">
+                        <label for="name">Your Name</label>
+                        <i class="fas fa-user"></i>
+                        <input type="text" id="name" placeholder="John Trangely">
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Your Email</label>
+                        <i class="fas fa-envelope"></i>
+                        <input type="email" id="email" placeholder="hello@nurency.com">
+                    </div>
+                    <div class="form-group">
+                        <label for="subject">Your Subject</label>
+                        <i class="fas fa-tag"></i>
+                        <input type="text" id="subject" placeholder="I want to hire you quickly">
+                    </div>
+                    <div class="form-group">
+                        <label for="message">Message</label>
+                        <i class="fas fa-comments"></i>
+                        <textarea id="message" placeholder="Write here your message"></textarea>
+                    </div>
+                    <button type="submit">Send Message</button>
+                </div>
+            </div>
+        </div>
+    </main>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const header = document.querySelector('header');
+            const navLinks = document.querySelectorAll('.nav-links a');
+            const newSectionImage = document.querySelector('.new-section-image img');
+
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 50) {
+                    header.style.backgroundColor = 'var(--accent-color)';
+                } else {
+                    header.style.backgroundColor = 'var(--secondary-color)';
+                }
+            });
+
+            navLinks.forEach(link => {
+                link.addEventListener('mouseenter', () => {
+                    link.style.transform = 'translateY(-2px)';
+                });
+                link.addEventListener('mouseleave', () => {
+                    link.style.transform = 'translateY(0)';
+                });
+            });
+
+            newSectionImage.addEventListener('mouseenter', () => {
+                newSectionImage.style.transform = 'scale(1.05)';
+            });
+            newSectionImage.addEventListener('mouseleave', () => {
+                newSectionImage.style.transform = 'scale(1)';
+            });
+        });
+
+        
+    </script>
+</body>
+</html>

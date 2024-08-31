@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Comprehensive Medical Form with Analysis</title>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+    <link href="medicalgpt.ico" rel="shortcut icon" type="image/x-icon"/>
+    <style>
+        :root {
+            --primary-color: #ADD8E6;
+            --secondary-color: #008080;
+            --accent-color: #004d4d;
+            --text-color: #090808;
+        }
+        body {
+            font-family: 'Open Sans', sans-serif;
+            background-color: var(--primary-color);
+            color: var(--text-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            background-color: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 1000px;
+        }
+        .form-row {
+            display: flex;
+            flex-wrap: wrap;
+            margin-bottom: 1rem;
+        }
+        .form-group {
+            flex: 1 1 30%;
+            margin-right: 1rem;
+            margin-bottom: 1rem;
+        }
+        .form-group:last-child {
+            margin-right: 0;
+        }
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+        input, select {
+            width: 100%;
+            padding: 0.5rem;
+            border: 1px solid var(--secondary-color);
+            border-radius: 4px;
+            font-family: 'Open Sans', sans-serif;
+        }
+        .button-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 1.5rem;
+        }
+        button {
+            background-color: var(--secondary-color);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-family: 'Open Sans', sans-serif;
+            font-weight: 600;
+            transition: background-color 0.3s, transform 0.1s;
+        }
+        button:hover {
+            background-color: var(--accent-color);
+        }
+        button:active {
+            transform: scale(0.98);
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        #outputBox, #videoSolution, #exercisesSolution, #blogSolution {
+            margin-top: 1.5rem;
+            padding: 1rem;
+            background-color: var(--primary-color);
+            border-radius: 4px;
+            display: none;
+        }
+        #outputBox {
+            white-space: pre-wrap;
+            font-family: 'Courier New', monospace;
+            border: 1px solid var(--secondary-color);
+        }
+        .section-title {
+            text-align: center;
+            color: var(--secondary-color);
+            margin-bottom: 1rem;
+        }
+        .video-container {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+        }
+        .video-box {
+            width: 30%;
+            height: 0;
+            padding-bottom: 18%; /* 16:9 Aspect Ratio */
+            background-color: #ddd;
+            margin-bottom: 1rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+            color: #666;
+        }
+        .blog-article {
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+        }
+        #analyzePopup {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: var(--secondary-color);
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 4px;
+            cursor: pointer;
+            display: none;
+            animation: popupAppear 0.3s ease-out;
+        }
+        @keyframes popupAppear {
+            from { opacity: 0; transform: translate(-50%, -60%); }
+            to { opacity: 1; transform: translate(-50%, -50%); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <form id="medicalForm">
+            <!-- Form inputs (same as before) -->
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="age">Age</label>
+                    <input type="number" id="age" name="age" value="69">
+                </div>
+                <div class="form-group">
+                    <label for="bloodPressure">Blood Pressure</label>
+                    <input type="number" id="bloodPressure" name="bloodPressure" value="80">
+                </div>
+                <div class="form-group">
+                    <label for="sugar">Sugar (nominal)</label>
+                    <input type="number" id="sugar" name="sugar" value="0">
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="pusCell">Pus Cell</label>
+                    <select id="pusCell" name="pusCell">
+                        <option value="Normal" selected>Normal</option>
+                        <option value="Abnormal">Abnormal</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="pusCellClumps">Pus Cell Clumps</label>
+                    <select id="pusCellClumps" name="pusCellClumps">
+                        <option value="NotPresent" selected>NotPresent</option>
+                        <option value="Present">Present</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="sodium">Sodium (mEq/L)</label>
+                    <input type="number" id="sodium" name="sodium" value="132">
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="hemoglobin">Hemoglobin (gms)</label>
+                    <input type="number" id="hemoglobin" name="hemoglobin" value="1" step="0.1">
+                </div>
+                <div class="form-group">
+                    <label for="hypertension">Hypertension</label>
+                    <select id="hypertension" name="hypertension">
+                        <option value="No" selected>No</option>
+                        <option value="Yes">Yes</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="diabetesMellitus">Diabetes Mellitus</label>
+                    <select id="diabetesMellitus" name="diabetesMellitus">
+                        <option value="No" selected>No</option>
+                        <option value="Yes">Yes</option>
+                    </select>
+                </div>
+            </div>
+            <div class="button-container">
+                <button type="submit" id="submitBtn">Get Results</button>
+            </div>
+        </form>
+        <div id="outputBox"></div>
+        <div id="videoSolution">
+            <h2 class="section-title">Video Solution</h2>
+            <div class="video-container">
+                <div class="video-box"><iframe src="https://www.youtube.com/embed/05ssqx-SZT0?si=RerFn9P0KVZ1Sn8x"></iframe> </div>
+                <div class="video-box"></div>
+                <div class="video-box"></div>
+            </div>
+        </div>
+        <div id="exercisesSolution">
+            <h2 class="section-title">Exercises Solution</h2>
+            <div class="video-container">
+                <div class="video-box"></div>
+                <div class="video-box"></div>
+                <div class="video-box"></div>
+                <div class="video-box"></div>
+                <div class="video-box"></div>
+                <div class="video-box"></div>
+                <div class="video-box"></div>
+                <div class="video-box"></div>
+            </div>
+        </div>
+        <div id="blogSolution">
+            <h2 class="section-title">Blog Solution</h2>
+            <div class="blog-article">1. Understanding Your Blood Pressure Results</div>
+            <div class="blog-article">2. Managing Diabetes: Tips and Tricks</div>
+            <div class="blog-article">3. The Importance of Balanced Electrolytes</div>
+            <div class="blog-article">4. Maintaining Healthy Hemoglobin Levels</div>
+            <div class="blog-article">5. Recognizing Signs of Urinary Tract Infections</div>
+        </div>
+    </div>
+    <div id="analyzePopup">Analyzing Results...</div>
+    <script>
+        let formData = {};
+
+        document.getElementById('submitBtn').addEventListener('mouseover', function() {
+            this.style.animation = 'pulse 0.5s ease-in-out';
+        });
+        document.getElementById('submitBtn').addEventListener('mouseout', function() {
+            this.style.animation = 'none';
+        });
+        document.getElementById('medicalForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            formData = Object.fromEntries(new FormData(e.target));
+            console.log("Form data:", formData);
+            
+            document.getElementById('analyzePopup').style.display = 'block';
+            setTimeout(analyzeResults, 2000);
+        });
+
+        function analyzeResults() {
+            document.getElementById('analyzePopup').style.display = 'none';
+            
+            let resultText = "Medical Analysis Results\n";
+            resultText += "========================\n\n";
+            resultText += `Age: ${formData.age} years\n`;
+            resultText += `Blood Pressure: ${formData.bloodPressure} mmHg\n`;
+            resultText += `Sugar Level: ${formData.sugar}\n`;
+            resultText += `Pus Cell: ${formData.pusCell}\n`;
+            resultText += `Pus Cell Clumps: ${formData.pusCellClumps}\n`;
+            resultText += `Sodium Level: ${formData.sodium} mEq/L\n`;
+            resultText += `Hemoglobin: ${formData.hemoglobin} gms\n`;
+            resultText += `Hypertension: ${formData.hypertension}\n`;
+            resultText += `Diabetes Mellitus: ${formData.diabetesMellitus}\n\n`;
+            resultText += "Observations:\n";
+            resultText += "-------------\n";
+            
+            if (formData.age > 60) resultText += "- Advanced age detected. Regular check-ups recommended.\n";
+            if (formData.bloodPressure > 120) resultText += "- Blood pressure is elevated. Monitor closely.\n";
+            if (formData.sugar > 100) resultText += "- Blood sugar levels are high. Dietary changes may be needed.\n";
+            if (formData.pusCell === "Abnormal") resultText += "- Abnormal pus cell count. Further tests may be required.\n";
+            if (formData.pusCellClumps === "Present") resultText += "- Presence of pus cell clumps detected. Consult a specialist.\n";
+            if (formData.sodium < 135 || formData.sodium > 145) resultText += "- Sodium levels are out of normal range. Electrolyte balance should be addressed.\n";
+            if (formData.hemoglobin < 12) resultText += "- Low hemoglobin levels detected. Iron supplements may be recommended.\n";
+            if (formData.hypertension === "Yes") resultText += "- Hypertension present. Follow prescribed treatment plan.\n";
+            if (formData.diabetesMellitus === "Yes") resultText += "- Diabetes Mellitus present. Maintain blood sugar control.\n";
+
+            if (resultText.split('\n').length === 13) {
+                resultText += "- All parameters appear to be within normal ranges. Maintain a healthy lifestyle.\n";
+            }
+
+            document.getElementById('outputBox').textContent = resultText;
+            document.getElementById('outputBox').style.display = 'block';
+            document.getElementById('videoSolution').style.display = 'block';
+            document.getElementById('exercisesSolution').style.display = 'block';
+            document.getElementById('blogSolution').style.display = 'block';
+        }
+    </script>
+</body>
+</html>

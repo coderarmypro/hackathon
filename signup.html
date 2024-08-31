@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="medicalgpt.ico" rel="shortcut icon" type="image/x-icon"/>
+    <title>Create your account</title>
+    <style>
+        :root {
+            --primary-color: #ADD8E6;
+            --secondary-color: #008080;
+            --accent-color: #004d4d;
+            --text-color: #090808;
+        }
+
+        body {
+            font-family: 'Open Sans', sans-serif;
+            background-color: var(--primary-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            background-color: white;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            color: var(--secondary-color);
+            text-align: center;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+
+        input {
+            margin-bottom: 1rem;
+            padding: 0.5rem;
+            border: 1px solid var(--secondary-color);
+            border-radius: 4px;
+        }
+
+        button {
+            background-color: var(--secondary-color);
+            color: white;
+            border: none;
+            padding: 0.5rem;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: var(--accent-color);
+        }
+
+        .login-link {
+            text-align: center;
+            margin-top: 1rem;
+        }
+
+        .login-link a {
+            color: var(--secondary-color);
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Create your account</h1>
+        <form id="signup-form">
+            <input type="text" id="name" placeholder="Name" required>
+            <input type="email" id="email" placeholder="Email" required>
+            <input type="password" id="password" placeholder="Password" required>
+            <button type="submit">Continue</button>
+        </form>
+        <div class="login-link">
+            Already have an account? <a href="signin.html">Log in</a>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('signup-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+
+            // Here you would typically send this data to a server
+            console.log('Signup:', { name, email, password });
+
+            // For demonstration, we'll store in localStorage (not secure for real applications)
+            localStorage.setItem('user', JSON.stringify({ name, email, password }));
+            
+            alert('Account created successfully!');
+            window.location.href = 'signin.html';
+        });
+
+        const user = JSON.parse(localStorage.getItem('user'));
+        if (user) {
+            document.getElementById('user-name').textContent = user.name;
+        }
+
+        // Sign Out
+        document.getElementById('sign-out').addEventListener('click', function(e) {
+            e.preventDefault();
+            localStorage.removeItem('user');
+            window.location.href = 'signin.html';
+        });
+    </script>
+</body>
+</html>
